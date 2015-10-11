@@ -83,13 +83,3 @@ fieldset {
     border:2px solid #CCC;
     margin:10px;
 }
-
-img {
-    vertical-align: middle;
-    text-align: center;
-    font: 14px/16px "Times New Roman", serif;
-    background-color: gray;
-    float:left;
-    height: 125px;
-    width: 100px;
-}
