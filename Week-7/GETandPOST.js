@@ -20,7 +20,7 @@ app.post('/', function(req, res){
 	console.log(req.body);
 	var context = {};
 	context.postList = qParams;
-	res.render('POSTandGET', context);
+	res.render('GETandPOST', context);
 });
 
 app.get('/', function(req, res){
@@ -30,7 +30,7 @@ app.get('/', function(req, res){
 	}
 	var context = {};
 	context.getList = qParams;
-	res.render('POSTandGET', context);
+	res.render('GETandPOST', context);
 });
 
 app.use(function(req, res){
