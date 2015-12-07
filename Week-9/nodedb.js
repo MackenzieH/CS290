@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use('/public', express.static(__dirname + '/public'));
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', 5000);
+app.set('port', 3000);
 
 var pool = mysql.createPool({
   connectionLimit: 10,
