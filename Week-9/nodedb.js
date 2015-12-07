@@ -1,12 +1,13 @@
 var express = require('express');
+var handlebars = require('express-handlebars').create({defaultLayout: 'main'});
 var mysql = require('mysql');
 var html = require('html');
 var bodyParser = require('body-parser');
-
 var app = express();
+
 app.use(bodyParser.urlencoded({extended: false}));
-var handlebars = require('express-handlebars').create({defaultLayout: 'main'});
 app.use(bodyParser.json());
+app.use('/public', express.static(__dirname + '/public'));
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 5000);
@@ -19,7 +20,28 @@ var pool = mysql.createPool({
   database: 'student'
 });
 
-app.use(express.static(__dirname + '/public'));
+app.get('/reset-table',function(req,res,next){
+  var context = {};
+  pool.query("DROP TABLE IF EXISTS workouts", function(err){
+    var createString = "CREATE TABLE workouts("+
+    "id INT PRIMARY KEY AUTO_INCREMENT,"+
+    "name VARCHAR(255) NOT NULL,"+
+    "reps INT,"+
+    "weight INT,"+
+    "date DATE,"+
+    "lbs BOOLEAN)";
+    pool.query(createString, function(err){
+      context.results = "Table reset";
+      res.render('updateWorkout', context);
+    //   if (err) {
+    //     next(err);
+    //     return
+    //   }
+    // });
+    // res.sendFile(__dirname +'/public/Form.html');
+    });
+  });
+});
 
 app.get('/newWorkout', function(req, res, next) {
   pool.query('INSERT INTO workouts (`name`, `reps`, `weight`, `date`, `lbs`) VALUES (?, ?, ?, ?, ?)', 
@@ -100,26 +122,6 @@ app.get('/deleteWorkout', function(req, res, next) {
       return;
     }
     res.send(JSON.stringify(result));
-  });
-});
-
-
-app.get('/reset-table',function(req,res,next){
-  pool.query("DROP TABLE IF EXISTS workouts", function(err){
-    var createString = "CREATE TABLE workouts("+
-    "id INT PRIMARY KEY AUTO_INCREMENT,"+
-    "name VARCHAR(255) NOT NULL,"+
-    "reps INT,"+
-    "weight INT,"+
-    "date DATE,"+
-    "lbs BOOLEAN)";
-    pool.query(createString, function(err){
-      if (err) {
-        next(err);
-        return
-      }
-    });
-    res.sendFile(__dirname +'/public/Form.html');
   });
 });
 
