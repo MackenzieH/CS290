@@ -43,33 +43,6 @@ app.get('/reset-table',function(req,res,next){
   });
 });
 
-app.get('/newWorkout', function(req, res, next) {
-  pool.query('INSERT INTO workouts (`name`, `reps`, `weight`, `date`, `lbs`) VALUES (?, ?, ?, ?, ?)', 
-    [req.query.name, req.query.reps, req.query.weight, req.query.date, req.query.lbs], function(err, result){
-    if (err) {
-      next(err);
-      return;
-    }
-    pool.query('SELECT * FROM workouts', function(err, rows, fields) {
-      if (err) {
-        next(err);
-        return;
-      }
-      res.send(JSON.stringify(rows));
-    });
-  });
-});
-
-app.get('/createTable', function(req, res, next) {
-  pool.query('SELECT * FROM workouts', function(err, rows, fields) {
-    if (err) {
-      next(err);
-      return;
-    }
-    res.send(JSON.stringify(rows));
-  });
-});
-
 app.post('/', function(req,res,next) {
   if (req.body['Edit']) {
     pool.query('SELECT * FROM workouts WHERE id=(?)', [req.body.id], function(err, rows, fields) {
@@ -80,7 +53,7 @@ app.post('/', function(req,res,next) {
       var data = rows[0];
       if(data.date != "0000-00-00") {
         var date = new Date(rows[0].date);
-      	date = date.toJSON();
+        date = date.toJSON();
         data.date = date.substring(0,10);
       }
       if(data.lbs == 0){
@@ -113,6 +86,29 @@ app.post('/', function(req,res,next) {
       }
     });
   }
+});
+
+app.get('/insert', function(req, res, next) {
+  var context = {}
+  pool.query('INSERT INTO workouts (`name`, `reps`, `weight`, `date`, `lbs`) VALUES (?, ?, ?, ?, ?)', 
+    [req.query.name, req.query.reps, req.query.weight, req.query.date, req.query.lbs], function(err, result){
+    if (err) {
+      next(err);
+      return;
+    }
+    context.results = "Inserted id " + result.insertID;
+    res.render('updateWorkout', context)
+  });
+});
+
+app.get('/createTable', function(req, res, next) {
+  pool.query('SELECT * FROM workouts', function(err, rows, fields) {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.send(JSON.stringify(rows));
+  });
 });
 
 app.get('/deleteWorkout', function(req, res, next) {
