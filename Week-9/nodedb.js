@@ -52,7 +52,7 @@ app.get('/createTable', function(req, res, next) {
   });
 });
 
-app.post('/', function(req,res,next) {
+app.get('/', function(req,res,next) {
   if (req.body['Edit']) {
     // If the edit button has been clicked, select the row to be edited
     pool.query('SELECT * FROM workouts WHERE id=(?)', [req.body.id], function(err, rows, fields) {
