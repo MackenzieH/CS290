@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<title>Weather by Zip Code</title>
+	<link href="style.css" rel="stylesheet">
+    <script>
+      var appid = "fa7d80c48643dfadde2cced1b1be6ca1";
+      document.addEventListener('DOMContentLoaded', bindButtons);
+      function bindButtons(){
+        document.getElementById("submit").addEventListener("click", function(event){
+          var req = new XMLHttpRequest();
+          var zipCode = document.getElementById("zipSubmit").value;
+	  var cityName = document.getElementById("citySubmit").value;
+          if(zipCode != ""){
+		req.open("GET", "http://api.openweathermap.org/data/2.5/weather?zip=" + zipCode + ",us&appid=" + appid, true);
+	  }else if(cityName != ""){
+	  	req.open("GET", "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + ",us&appid=" + appid, true);
+	  }else{
+		alert("No zip code, no city name");
+	  }
+	  req.addEventListener("load", function(){
+		if(req.status >= 200 && req.status < 400){
+          		var response = JSON.parse(req.responseText);
+         	 	document.getElementById("cityName").textContent = response.name;
+         	 	document.getElementById("countryName").textContent = response.sys.country;
+			var sunriseTime = new Date(response.sys.sunrise*1000);
+         	 	document.getElementById("sunrise").textContent = sunriseTime;
+			var sunsetTime = new Date(response.sys.sunset*1000);
+         	 	document.getElementById("sunset").textContent = sunsetTime;
+			var date = new Date(response.dt*1000);
+         	 	document.getElementById("dt").textContent = date;
+         		document.getElementById("lon").textContent = response.coord.lon;
+          		document.getElementById("lat").textContent = response.coord.lat;
+			var impTemp = response.main.temp;
+			impTemp *= 9;
+			impTemp /= 5;
+			impTemp -= 459.67;
+        	 	document.getElementById("temp").textContent = impTemp;
+        	 	document.getElementById("seaPres").textContent = response.main.sea_level;
+        	 	document.getElementById("grndPres").textContent = response.main.grnd_level;
+        	  	document.getElementById("hum").textContent = response.main.humidity;
+       	  	  	document.getElementById("windSpd").textContent = response.wind.speed;
+          	  	document.getElementById("windDeg").textContent = response.wind.deg;
+          	  	document.getElementById("cldPerc").textContent = response.clouds.all;
+          	  	document.getElementById("rnThreeHr").textContent = response.clouds.all;
+          }else{
+		console.log("Error in network request: " + request.statusText);
+	  }});
+	  req.send(null);
+          event.preventDefault();
+        })
+      }
+    </script>
+  </head>
+  <body>
+    <form>
+      <fieldset>
+        <legend>CURRENT Weather Conditions</legend>
+        <label for="zipSubmit">Enter Zip Code </label>
+        <input type="text" name="zipSubmit" id="zipSubmit">
+        <input type="submit" id="submit">
+	<p> Or </p>
+        <label for="citySubmit">Enter a US City (NO spaces) </label>
+        <input type="text" name="citySubmit" id="citySubmit">
+        <input type="submit" id="submit">
+      </fieldset>
+    </form>
+    <div>
+      <h2>Current Conditions:</h2>
+	<span id="cityName", class="output"></span>
+	<span id="countryName", class="output"></span>
+      <ul>
+        <li><span>Current Time: </span><span id="dt", class="output"></span></li>
+        <li><span>Temperature (F): </span><span id="temp", class="output"></span></li>
+        <li><span>City Longitude: </span><span id="lon", class="output"></span></li>
+        <li><span>City Latitude: </span><span id="lat", class="output"></span></li>
+        <li><span>Sunrise: </span><span id="sunrise", class="output"></span></li>
+        <li><span>Sunset: </span><span id="sunset", class="output"></span></li>
+        <li><span>Atmospheric Pressure at Sea Level: </span><span id="seaPres", class="output"></span></li>
+        <li><span>Atmospheric Pressure at Ground Level: </span><span id="grndPres", class="output"></span></li>
+        <li><span>Humidity %: </span><span id="hum", class="output"></span></li>
+        <li><span>Wind Speed(mph): </span><span id="windSpd", class="output"></span></li>
+        <li><span>Wind Direction(degrees): </span><span id="windDeg", class="output"></span></li>
+        <li><span>Cloud %: </span><span id="cldPerc", class="output"></span></li>
+        <li><span>Rainfall (last 3 hrs): </span><span id="rnThreeHr", class="output"></span></li>
+      </ul>
+    </div>
+  </body>
+</html>

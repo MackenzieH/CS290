@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Submit to httpbin.org </title>
+<link href="style.css" rel="stylesheet">
+<script>
+	document.addEventListener("DOMContentLoaded", bindButton);
+	function bindButton(){
+		document.getElementById("submitButton").addEventListener("click", function(event){
+			var req = new XMLHttpRequest();
+			var userText = document.getElementById("txtSub").value;
+			console.log("test bindButton()");
+			req.open("POST", "http://httpbin.org/post", true);
+			req.setRequestHeader("Content-Type", "application/json");
+			req.addEventListener("load", function(){
+				if(req.status >= 200 && req.status < 400){
+					var response = JSON.parse(req.responseText);
+					document.getElementById("host").textContent = response.headers.Host;
+					document.getElementById("url").textContent = response.url;
+					document.getElementById("origin").textContent = response.origin;
+					document.getElementById("data").textContent = response.data;
+					document.getElementById("jsonString").textContent = JSON.stringify(req.responseText);
+				}else{
+					console.log("Error in network request: " + req.status);
+				}});
+			req.send(JSON.stringify(userText));
+			event.preventDefault();	
+		});
+	}
+</script>
+</head>
+<body>
+	<form>
+		<fieldset>
+			<legend>Text to Submit</legend>
+				<label for="textSubmit">Enter some text</label>
+				<input type="text" name="textSubmit" id="txtSub">
+				<input type="submit" id="submitButton">
+		</fieldset>
+	</form>
+	<div>
+		<h2>Response: </h2>
+		<ul>
+			<li><span>Host: </span> <span id="host", class="output"></li>
+			<li><span>POST to URL: </span> <span id="url", class="output"></li>
+			<li><span>Origin: </span> <span id="origin", class="output"></li>
+			<li><span>Submitted Data: </span> <span id="data", class="output"></li>
+			<li><span>Stringified JSON response: </span> <span id="jsonString", class="output"></li>
+		</ul>
+	</div>
+</body>
+
+</html>
