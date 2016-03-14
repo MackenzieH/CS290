@@ -9,7 +9,7 @@ var handlebars = require('express-handlebars').create({defaultLayout: 'main'});
 app.use(bodyParser.json());
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', 5000);
+app.set('port', 3000);
 
 // From assignment: allows access to MySQL database
 var pool = mysql.createPool({
