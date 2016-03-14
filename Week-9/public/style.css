@@ -1,4 +1,62 @@
-p{
-  margin: 0px;
-  padding: 10px;
+body {
+  margin: 5em; 
+  font-family: sans-serif;
+}
+header {
+  text-align: right;
+}
+.forms {
+  width: 100%;
+}
+
+legend {
+  font-weight: bold;
+  font-size: 1em;
+}
+
+input {
+  margin-right: 2em;
+}
+
+#weight {
+  width: 50px;
+}
+
+#exercise {
+  width: 200px;
+}
+
+#reps {
+  width: 50px;
+}
+#lbs {
+  width: 50px;
+}
+
+table {
+  text-align: center;
+  margin-top: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+  border-collapse:collapse;
+  border-style:hidden;
+}
+
+caption {
+  font-size: 2em;
+  font-variant: small-caps;
+  margin-bottom: 1em;
+}
+
+table td, table th {
+  border: 1px solid black;
+}
+
+.id {
+  display: none;
+}
+
+.idTitle {
+  display: none;
 }
